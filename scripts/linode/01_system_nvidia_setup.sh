@@ -5,7 +5,9 @@
 
 set -e
 
-STATUS_FILE="/tmp/linode_setup_status.txt"
+# Get the directory where this script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+STATUS_FILE="$SCRIPT_DIR/linode_setup_status.txt"
 
 # Check if running as root
 if [ "$EUID" -ne 0 ]; then 

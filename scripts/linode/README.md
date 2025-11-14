@@ -19,7 +19,7 @@ sudo ./01_system_nvidia_setup.sh <username> <password>
 
 **Important Notes:**
 - This script must be run as root
-- The script handles reboots automatically using a status file
+- The script handles reboots automatically using a status file (`linode_setup_status.txt`) stored in the same directory as the script
 - You will need to reboot twice during the process
 - After each reboot, simply run the script again and it will continue from where it left off
 
@@ -116,6 +116,7 @@ sudo ./03_onedrive_setup.sh
 
 - **"Reboot pending" error**: The script detected that a reboot is needed. Simply reboot and run the script again.
 - **nvidia-smi fails**: Make sure you've rebooted after driver installation. If it still fails, check that your Linode instance has GPU support enabled.
+- **Status file location**: The status file `linode_setup_status.txt` is stored in the same directory as the script. If you need to reset the installation, you can delete this file.
 
 ### Script 02 Issues
 
