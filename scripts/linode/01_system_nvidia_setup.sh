@@ -103,9 +103,33 @@ if [ "$STATUS" == "update_complete" ]; then
     echo "Installing nvidia-open..."
     apt-get install -y nvidia-open
     
+    # Set up CUDA environment variables for the user
+    echo ""
+    echo "Setting up CUDA environment variables..."
+    USER_HOME=$(eval echo ~$USERNAME)
+    CUDA_HOME="/usr/local/cuda-12.8"
+    
+    # Add CUDA_HOME and PATH to .bashrc if not already present
+    if ! grep -q "CUDA_HOME=$CUDA_HOME" "$USER_HOME/.bashrc"; then
+        echo "" >> "$USER_HOME/.bashrc"
+        echo "# CUDA 12.8 environment variables" >> "$USER_HOME/.bashrc"
+        echo "export CUDA_HOME=$CUDA_HOME" >> "$USER_HOME/.bashrc"
+        echo "export PATH=\$CUDA_HOME/bin:\$PATH" >> "$USER_HOME/.bashrc"
+        echo "export LD_LIBRARY_PATH=\$CUDA_HOME/lib64:\$LD_LIBRARY_PATH" >> "$USER_HOME/.bashrc"
+        echo "✓ CUDA environment variables added to $USERNAME's .bashrc"
+    else
+        echo "✓ CUDA environment variables already present in $USERNAME's .bashrc"
+    fi
+    
+    # Also set for current session (for root, but will be available after reboot for user)
+    export CUDA_HOME=$CUDA_HOME
+    export PATH=$CUDA_HOME/bin:$PATH
+    export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
+    
     write_status "nvidia_install_complete"
     echo ""
     echo "=== NVIDIA drivers installed ==="
+    echo "CUDA_HOME has been set to $CUDA_HOME and added to PATH"
     echo "Please reboot the system now with: sudo reboot"
     echo "After reboot, run this script again to verify installation."
     exit 0
@@ -144,6 +168,22 @@ if [ "$STATUS" == "nvidia_install_complete" ]; then
     else
         echo "✗ Error: nvcc not found. Please check CUDA installation."
         exit 1
+    fi
+    
+    # Verify CUDA environment variables are set in user's .bashrc
+    echo ""
+    echo "Verifying CUDA environment variables..."
+    USER_HOME=$(eval echo ~$USERNAME)
+    CUDA_HOME="/usr/local/cuda-12.8"
+    if grep -q "CUDA_HOME=$CUDA_HOME" "$USER_HOME/.bashrc"; then
+        echo "✓ CUDA environment variables are set in $USERNAME's .bashrc"
+        echo "  CUDA_HOME=$CUDA_HOME"
+        echo "  PATH includes \$CUDA_HOME/bin"
+        echo "  LD_LIBRARY_PATH includes \$CUDA_HOME/lib64"
+        echo ""
+        echo "Note: User $USERNAME should run 'source ~/.bashrc' or log out/in to apply changes."
+    else
+        echo "✗ Warning: CUDA environment variables not found in $USERNAME's .bashrc"
     fi
     
     write_status "complete"
