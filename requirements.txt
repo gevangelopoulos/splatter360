@@ -1,4 +1,5 @@
 wheel
+numpy==1.26.4
 tqdm
 pytorch_lightning
 black
@@ -12,11 +13,11 @@ colorama
 scikit-image
 colorspacious
 matplotlib
-moviepy
+moviepy==1.0.3
 imageio
 git+https://github.com/gevangelopoulos/diff-gaussian-rasterization-modified
 timm
-dacite
+dacite==1.8.1
 lpips
 e3nn
 plyfile
