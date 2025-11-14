@@ -35,6 +35,7 @@ loss:
     weight: 0.05
 
 dataset: 
+  name: re10k
   image_shape: [256, 256]
   roots: [datasets/re10k]
   near: 1.
