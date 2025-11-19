@@ -1,6 +1,6 @@
 #!/bin/bash
-# Conda Environment and PyTorch Dependencies Setup Script
-# Usage: ./02_conda_pytorch_setup.sh
+# Conda Environment and PyCOLMAP Dependencies Setup Script
+# Usage: ./02a_conda_pycolmap_setup.sh
 # This script should be run as the regular user (not root)
 
 set -e
@@ -19,7 +19,7 @@ if [ "$EUID" -eq 0 ]; then
     exit 1
 fi
 
-echo "=== Conda and PyTorch Setup ==="
+echo "=== Conda and PyCOLMAP Setup ==="
 echo "Project root: $PROJECT_ROOT"
 echo ""
 
@@ -94,9 +94,9 @@ else
     echo "✓ Conda environment created"
 fi
 
-# Step 5: Activate environment and install PyTorch
+# Step 5: Activate environment and install PyCOLMAP
 echo ""
-echo "Step 5: Activating environment and installing PyTorch with CUDA 12.8..."
+echo "Step 5: Activating environment and installing PyCOLMAP..."
 conda activate "$CONDA_ENV_NAME"
 
 # Verify we're in the right environment
@@ -107,12 +107,12 @@ fi
 
 echo "✓ Activated environment: $CONDA_DEFAULT_ENV"
 
-# Install PyTorch with CUDA 12.8
+# Install PyCOLMAP from conda-forge
 echo ""
-echo "Installing PyTorch 2.7.0 with CUDA 12.8..."
-pip install torch==2.7.0+cu128 torchvision==0.22.0+cu128 torchaudio==2.7.0+cu128 --index-url https://download.pytorch.org/whl/cu128
+echo "Installing PyCOLMAP from conda-forge..."
+conda install -c conda-forge pycolmap -y
 
-echo "✓ PyTorch installed"
+echo "✓ PyCOLMAP installed"
 
 # Step 6: Install requirements
 echo ""
@@ -129,19 +129,12 @@ fi
 # Step 7: Verify installation
 echo ""
 echo "Step 7: Verifying installation..."
-python -c "import torch; print(f'PyTorch version: {torch.__version__}'); print(f'CUDA available: {torch.cuda.is_available()}'); print(f'CUDA version: {torch.version.cuda if torch.cuda.is_available() else \"N/A\"}')"
+python -c "import pycolmap; print(f'PyCOLMAP version: {pycolmap.__version__ if hasattr(pycolmap, \"__version__\") else \"installed\"}'); print('PyCOLMAP successfully imported')"
 
 echo ""
 echo "=== Setup Complete! ==="
-echo "Conda environment '$CONDA_ENV_NAME' is ready with PyTorch and dependencies."
+echo "Conda environment '$CONDA_ENV_NAME' is ready with PyCOLMAP and dependencies."
 echo ""
 echo "To activate the environment in the future, run:"
 echo "  conda activate $CONDA_ENV_NAME"
-
-
-
-
-
-
-
 
